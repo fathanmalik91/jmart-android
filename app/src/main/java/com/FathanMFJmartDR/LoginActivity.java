@@ -15,8 +15,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-//import com.google.gson.Gson;
-//import com.google.gson.JsonObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
@@ -31,20 +31,25 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
     public static Account getLoggedAccount(){
         return loggedAccount;
     }
+    private void onRegisterClick(View view){
+        String email = etEmail.getText().toString();
+        String pass = etPass.getText().toString();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-       // etEmail = findViewById(R.id.etLoginEmail);
-       // etPass = findViewById(R.id.etLoginPass);
-      //  btnLogin = findViewById(R.id.btnLogin);
-//
+        etEmail = findViewById(R.id.emailLogin);
+        etPass = findViewById(R.id.passwordLogin);
+        btnLogin = findViewById(R.id.loginButton);
+        tvRegister = findViewById(R.id.emailRegister);
+
         etEmail.setText("fathan.malik91@ui.ac.id");
         etPass.setText("fathamalik12");
         btnLogin.setOnClickListener(this::onLoginClick);
-        //tvRegister.setOnClickListener(this::onRegisterClick);
+        tvRegister.setOnClickListener(this::onRegisterClick);
 
     }
 

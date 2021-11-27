@@ -15,10 +15,10 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
-            android:name=".RegiserActivity"
-            android:exported="false" />
+            android:name=".RegisterActivity"
+            android:exported="true" />
         <activity
             android:name=".LoginActivity"
             android:exported="true">
