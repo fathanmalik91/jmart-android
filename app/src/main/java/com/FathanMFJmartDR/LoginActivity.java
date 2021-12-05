@@ -9,31 +9,29 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.FathanMFJmartDR.model.Store;
 import com.FathanMFJmartDR.request.LoginRequest;
 import com.FathanMFJmartDR.model.Account;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
-public class LoginActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener{
-    //private static final Gson gson = new Gson();
+public class LoginActivity extends AppCompatActivity{
+    private static final Gson gson = new Gson();
     private static Account loggedAccount = null;
+    private TextView tv_registerNow;
     private EditText etEmail;
-    private EditText etPass;
+    private EditText etPassword;
     private Button btnLogin;
-    private TextView tvRegister;
-
+    //Method to get the currently logged account
     public static Account getLoggedAccount(){
         return loggedAccount;
-    }
-    private void onRegisterClick(View view){
-        String email = etEmail.getText().toString();
-        String pass = etPass.getText().toString();
     }
 
     @Override
@@ -41,40 +39,60 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        etEmail = findViewById(R.id.emailLogin);
-        etPass = findViewById(R.id.passwordLogin);
-        btnLogin = findViewById(R.id.loginButton);
-        tvRegister = findViewById(R.id.emailRegister);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        btnLogin = findViewById(R.id.btnLogin);
+        tv_registerNow = findViewById(R.id.tv_registerNow);
 
-        etEmail.setText("fathan.malik91@ui.ac.id");
-        etPass.setText("fathamalik12");
-        btnLogin.setOnClickListener(this::onLoginClick);
-        tvRegister.setOnClickListener(this::onRegisterClick);
+        etEmail.setText("fathanmalik@gmail.com");
+        etPassword.setText("fathanmalik12");
 
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = etEmail.getText().toString();
+                String password = etPassword.getText().toString();
+                LoginRequest loginRequest = new LoginRequest(email, password, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            loggedAccount = gson.fromJson(response, Account.class);
+                            Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "Login unsuccessful, error occured", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Error occured.", Toast.LENGTH_LONG).show();
+                    }
+                });
+                queue.add(loginRequest);
+            }
+        });
+        tv_registerNow.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                openRegisterActivity();
+            }
+        });
     }
-
-    private void onLoginClick(View view){
-        String email = etEmail.getText().toString();
-        String pass = etPass.getText().toString();
+    public void openRegisterActivity(){
+        startActivity(new Intent(this, RegisterActivity.class));
     }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
-        Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
+    //Method to reload the currently logged account after it's modified
+    public static void reloadLoggedAccount(String response){
+        loggedAccount = gson.fromJson(response, Account.class);
     }
-
-    @Override
-    public void onResponse(String response) {
-        Intent i = new Intent(this, MainActivity.class);
-        try{
-            JSONObject object = new JSONObject(response);
-            i.putExtra("id", object.getInt("id"));
-        }
-        catch(Exception e){
-            Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show();
-            return;
-        }
-        Toast.makeText(this, "Login Successfull", Toast.LENGTH_LONG).show();
-        startActivity(i);
+    //Method to insert newly created Store data to a logged account;
+    public static void insertLoggedAccountStore(String response){
+        Store newStore = gson.fromJson(response, Store.class);
+        loggedAccount.store = newStore;
     }
 }
