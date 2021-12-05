@@ -76,7 +76,7 @@ public class AboutMeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String balance = et_topUpAmount.getText().toString();
-                String URL = "http://10.0.2.2:1989/account/"+LoginActivity.getLoggedAccount().id+"/topUp";
+                String URL = "http://10.0.2.2:1998/account/"+LoginActivity.getLoggedAccount().id+"/topUp";
                 StringRequest topUpRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

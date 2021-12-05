@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 String lowestPrice= et_lowestPrice.getText().toString();
                 String highestPrice = et_highestPrice.getText().toString();
                 String category = spinner_filterCategory.getSelectedItem().toString();
-                StringRequest filterRequest = new StringRequest(Request.Method.GET, "http://10.0.2.2:8081/product/getFiltered?pageSize=10&accountId="+LoginActivity.getLoggedAccount().id+"&search="+productName+"&minPrice="+lowestPrice+"&maxPrice="+highestPrice+"&category="+category, new Response.Listener<String>() {
+                StringRequest filterRequest = new StringRequest(Request.Method.GET, "http://10.0.2.2:1998/product/getFiltered?pageSize=10&accountId="+LoginActivity.getLoggedAccount().id+"&search="+productName+"&minPrice="+lowestPrice+"&maxPrice="+highestPrice+"&category="+category, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         JsonReader reader = new JsonReader(new StringReader(response)); //Use reader to read json response of filtered products
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     }
     //Fetch Products Request Method
     public void fetchProduct(List<Product> productNames, int page, RequestQueue queue, boolean refreshAdapter){
-        StringRequest fetchProductsRequest = new StringRequest(Request.Method.GET, "http://10.0.2.2:8081/product/page?page="+page+"&pageSize=10", new Response.Listener<String>() {
+        StringRequest fetchProductsRequest = new StringRequest(Request.Method.GET, "http://10.0.2.2:1998/product/page?page="+page+"&pageSize=10", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JsonReader reader = new JsonReader(new StringReader(response));
